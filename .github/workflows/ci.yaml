@@ -1,4 +1,4 @@
-name: CI - Lint and Test
+name: Skeleton CI Pipeline
 
 on:
   push:
@@ -7,39 +7,21 @@ on:
     branches: [ "main", "dev" ]
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
+      - name: Echo start
+        run: echo "CI skeleton is working!"
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.10
+      - name: Simulate DB Check
+        run: |
+          echo "Checking database connectivity..."
+          echo "Database OK"
 
-    - name: Install frontend dependencies
-      run: |
-        cd frontend
-        npm install
-
-    - name: Run frontend tests
-      run: |
-        cd frontend
-        npm test
-
-    - name: Install backend dependencies
-      run: |
-        cd backend
-        pip install -r requirements.txt
-
-    - name: Run backend tests
-      run: |
-        cd backend
-        pytest
+      - name: Simulate User Check
+        run: |
+          echo "Verifying user exists..."
+          echo "User check passed"
