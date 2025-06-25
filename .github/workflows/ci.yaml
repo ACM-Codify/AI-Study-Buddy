@@ -25,8 +25,7 @@ jobs:
         run: |
           echo "Verifying user exists..."
           echo "User check passed"
-
-build-docker:
+  build-docker:
     needs: check
     runs-on: ubuntu-latest
     steps:
@@ -35,3 +34,4 @@ build-docker:
 
       - name: Build Docker image
         run: docker build -t dummy-backend .
+
