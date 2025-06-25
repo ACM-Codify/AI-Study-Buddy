@@ -19,7 +19,7 @@ jobs:
       - name: Simulate DB Check
         run: |
           echo "Checking database connectivity..."
-          echo "Database OK"
+          echo "Simulated database OK"
 
       - name: Simulate User Check
         run: |
