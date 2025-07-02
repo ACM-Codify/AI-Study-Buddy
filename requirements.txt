@@ -1,0 +1,7 @@
+# Linting and format check
+flake8
+black
+
+# Future dependencies
+# fastapi
+# uvicorn[standard]

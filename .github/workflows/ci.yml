@@ -1,0 +1,103 @@
+name: CI Pipeline # Name of workflow (optional but recommended)
+
+on: # when to trigger workflow
+  push:
+    branches: [vrichardo]
+  pull_request:
+    branches: [vrichardo]
+
+jobs: # jobs is an action/multiple actions to done in the workflow
+  setup: # name of job (arbitrary)
+    runs-on: ubuntu-latest # server/env for workflow (Ubuntu, Windows, MacOS)
+    steps:
+      - name: Checkout Code # name of action
+        uses: actions/checkout@v4 # clone repo to workflow
+
+      - name: Cache Node.js modules # create cache because every actions job runs a fresh machine
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4 # prepair node in environment
+        with:
+          node-version: "22"
+
+      - name: Install Node.js dependencies
+        run: npm ci # takes requirements from package.json/package-lock.json
+
+      - name: Cache Python modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt')}}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        uses: py-actions/py-dependency-install@v4 # takes requirements from requirements.txt
+
+  lint-and-format-check:
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Reuse the cache and environment setup
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        uses: py-actions/py-dependency-install@v4
+
+      # Run Linter and Check Format
+
+      - name: Run Python linter
+        run: flake8
+
+      - name: Check Python format
+        run: black --check
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check format with Prettier
+        run: npm run format
+        continue-on-error: true # will not block, just inform us

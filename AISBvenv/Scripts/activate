@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\Richa\Desktop\WORK\PERSONAL WORK\ebooks and documents\projects\Current Projects\AI-Study-Buddy\AISBvenv"
+VIRTUAL_ENV="C:\Users\Richa\Desktop\work\personal\project_and_practice\projects\current_projects\AI-Study-Buddy\AISBvenv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
